@@ -1,10 +1,10 @@
 #!/bin/bash
-
-# Remove strict bash checking that causes the unbound variable crash
 sed -i 's/set -u//g' install.sh
 sed -i 's/set -euo pipefail/set -eo pipefail/g' install.sh
 
-# Run the installer inside a simulated virtual terminal
+# Force bash to print every command before executing it
+sed -i '2i set -x' install.sh
+
 expect -c '
 set timeout -1
 spawn bash ./install.sh
@@ -15,6 +15,4 @@ expect {
     eof
 }
 '
-
-# Keep the container running
 tail -f /dev/null
